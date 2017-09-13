@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>clock</title>
+    <style>
+        *{margin: 0; padding: 0;}
+        body,html{width: 100%; height: 100%}
+        body{
+            position: relative;
+        }
+        .container{
+            position: absolute;
+            width: 600px;height: 400px;
+            top: 50%;left: 50%;
+            transform: translate(-50%,-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #56A0CE;
+            border-radius: 10%;
+        }
+        /*钟表背景*/
+        .clock{
+            width: 300px; height: 300px;
+            border-radius: 100%;
+            background:radial-gradient(rgb(116, 114, 114), rgb(101, 99, 95), rgb(146, 145, 145));
+            position: relative;
+        }
+        /*AM OR PM*/
+        .clock>.isam{
+            width: 100px;height: 35px;
+            line-height: 35px;
+            text-align: center;
+            top: -43px;left: 100px;
+            font-weight: bold;
+        }
+        /*钟表圆点*/
+        .clock>.dot{
+            width: 15px;height: 15px;
+            border-radius: 100%;
+            background-color: #CFCCCC;
+            position: absolute;
+            top: 50%;left: 50%;
+            transform: translate(-50%,-50%);
+        }
+        .clock>div {
+            position: absolute;
+            transform-origin: 0 0;
+            z-index: 20;
+        }
+        /*钟表时针*/
+        .clock>.hour {
+            background:#000;
+            border-radius: 15px;
+            width: 70px;
+            height: 5px;
+            top: 149px;
+            left: 149px;
+        }
+        /*钟表分针*/
+        .clock>.minute {
+            background: #000000;
+            width: 105px;
+            height: 2px;
+            top: 149px;
+            left: 149px;
+        }
+        /*钟表秒针*/
+        .clock>.second {
+            background: red;
+            width: 130px;
+            height: 2px;
+            top: 149px;
+            left: 149px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="clock">
+            <div class="isam"></div>
+            <div class="hour"></div>
+            <div class="minute"></div>
+            <div class="second"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+    <script>
+        function clock(){
+            //获取当前时间
+            var date=new Date();
+            var hours=date.getHours();
+            var minutes=date.getMinutes();
+            var seconds=date.getSeconds();
+            //判断是上午还是下午  
+            var isAM='';
+            if (hours>12){
+                hours-=12;
+                isAM='PM';
+            }else 
+                isAM = 'AM';
+            document.querySelector('.isam').innerText=isAM;
+            //全部换算成秒进行计算
+            var secondDeg=seconds/60*360  //60秒一圈
+            var minuteDeg=(minutes*60+seconds)/3600*360  //3600秒一圈
+            var hourDeg=(hours*3600+minutes*60+seconds)/(12*3600)*360 //3600秒*12一圈
+            //因为都是盒子,水平摆放原点都为最左侧,所以摆好之后都是横着指向3点方向,实际处理时需要-90以修正误差
+            document.querySelector('.second').style.transform=`rotate(${-90+secondDeg}deg)`
+            document.querySelector('.hour').style.transform = `rotate(${-90+hourDeg}deg)`
+            document.querySelector('.minute').style.transform=`rotate(${-90+minuteDeg}deg)`
+        }
+        clock();
+        setInterval(function (){
+            clock();
+        },1000);
+    </script>
+</body>
+</html>
